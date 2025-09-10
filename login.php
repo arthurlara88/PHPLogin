@@ -8,15 +8,17 @@
 <body>
     <h1>Login</h1>
     <!-- Entrada de dados-->
-        <form method="post">
+        <form method="POST">
             
             <label>Digite seu email:</label>
-            <input type="email" name="email" required>
+            <input type="email" name="email" required><br><br>
 
             <label>Digite sua senha:</label>
-            <input type="password" name="senha" required>
+            <input type="password" name="senha" required><br><br>
 
-            <input type="submit" value="Entrar">
+            <hr>
+        
+            <input type="submit" value="Entrar"><br><br>
 
         </form>
 </body>
