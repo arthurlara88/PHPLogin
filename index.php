@@ -6,10 +6,13 @@
     <title>Index</title>
 </head>
 <body>
-    <h1>Bem-vindo</h1>
+    <h1>Seja bem-vindo</h1>
 
-    <h2>Efetuar Login</h2>
-    <h2>Cadastrar novo usuario</h2>
+    <p>Como gostaria de prosseguir?</p>
+
+    <p><a href="login.php">Efetuar login</a></p>
+    
+    <p><a href="register.php">Novo usuário</a></p>
 
 </body>
 </html>
