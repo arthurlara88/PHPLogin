@@ -40,17 +40,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($nome && $email && $senha) {
         $verifica = $pdo->prepare("SELECT id FROM usuarios WHERE email = ?");
-        $verifica->execute($email);
+        $verifica->execute([$email]);
 
-        //busca linha
         if ($verifica->fetch()) {
             echo "Erro ao cadastrar";
         }
         else {
-            //criptografar senha
             $hash = password_hash($senha, PASSWORD_DEFAULT);
-            $stmt = $pdo->prepare("INSERT INTO usuario (nome, email, senha) VALUES (?, ?, ?)");
-            $stmt->execute([$nome, $email, $senha]);
+            $stmt = $pdo->prepare("INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)");
+            $stmt->execute([$nome, $email, $hash]);
 
             echo "Cadastro realizado.";
         }
