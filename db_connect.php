@@ -1,7 +1,7 @@
 <?php
 
-$server = "localhost";
-$username = "root"; // usuario
+$server = "newton.coltec.ufmg.br";
+$username = "a2024951923@teiacoltec.org"; // usuario
 $password = "";
 $dbname = "atividade"; //nome do seu banco de dados
 
