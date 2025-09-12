@@ -1,37 +1,3 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal do Aluno</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Bem-vindo, <?php echo $aluno['nome']; ?>!</h1>
-        <p>Sua turma: <strong><?php echo $turma_aluno; ?></strong></p>
-
-        <hr>
-
-        <h2>Suas Atividades</h2>
-
-        <?php if ($result_atividades->num_rows > 0): ?>
-            <div class="atividades-list">
-                <?php while ($atividade = $result_atividades->fetch_assoc()): ?>
-                    <div class="atividade-card">
-                        <h3><?php echo $atividade['titulo']; ?></h3>
-                    </div>
-                <?php endwhile; ?>
-            </div>
-        <?php else: ?>
-            <p>Nenhuma atividade encontrada.</p>
-        <?php endif; ?>
-
-        <a href="logout.php">Sair</a>
-    </div>
-</body>
-</html>
-
 <?php
 
 session_start();
@@ -68,3 +34,36 @@ $stmt_atividades->execute();
 $result_atividades = $stmt_atividades->get_result();
 
 ?>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal do Aluno</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Bem-vindo, <?php echo $aluno['nome']; ?>!</h1>
+        <p>Sua turma: <strong><?php echo $turma_aluno; ?></strong></p>
+
+        <hr>
+
+        <h2>Suas Atividades</h2>
+
+        <?php if ($result_atividades->num_rows > 0): ?>
+            <div class="atividades-list">
+                <?php while ($atividade = $result_atividades->fetch_assoc()): ?>
+                    <div class="atividade-card">
+                        <h3><?php echo $atividade['titulo']; ?></h3>
+                    </div>
+                <?php endwhile; ?>
+            </div>
+        <?php else: ?>
+            <p>Nenhuma atividade encontrada.</p>
+        <?php endif; ?>
+
+        <a href="logout.php">Sair</a>
+    </div>
+</body>
+</html>
