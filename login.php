@@ -49,7 +49,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     //consulta primeira linha do resultado SQL e retorna false se nao encontrar
     $usuario = $stmt->fetch();
 
-    if ($usuario && password_verify($senha, $usuario["password"])) {
+    if ($usuario && password_verify($senha, $usuario["nome"])) {
         $_SESSION["usuario_id"] = $usuario["id"]; //confere id
         $_SESSION["usuario_nome"] = $usuario["nome"]; //confere nome
         $_SESSION["usuario_email"] = $usuario["email"]; //confere email
