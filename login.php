@@ -39,7 +39,7 @@ require_once ("db_connect.php");
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     $email = trim($_POST["email"]); //trim remove espaços em branco apos o email, formatação
-    $senha = $_POST["password"];
+    $senha = $_POST["senha"];
 
     //consulta sql via PDO
     //? corresponde ao email, evita SQLInjection
@@ -49,7 +49,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     //consulta primeira linha do resultado SQL e retorna false se nao encontrar
     $usuario = $stmt->fetch();
 
-    if ($usuario && password_verify($senha, $usuario["nome"])) {
+    if ($usuario && password_verify($senha, $usuario["senha"])) {
         $_SESSION["usuario_id"] = $usuario["id"]; //confere id
         $_SESSION["usuario_nome"] = $usuario["nome"]; //confere nome
         $_SESSION["usuario_email"] = $usuario["email"]; //confere email
