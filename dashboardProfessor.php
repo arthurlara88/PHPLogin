@@ -1,41 +1,40 @@
 <?php
 session_start();
 
-
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'professor') {
-    header("Location: login.php"); 
+// Garante que apenas o professor pode acessar esta página
+if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] != 'professor') {
+    header("Location: login.php");
     exit();
 }
 
 require_once 'db_connect.php';
 
-
-$nome_professor = $_SESSION['user_name'];
-
-
+$nome_professor = $_SESSION['usuario_nome'];
+$id_professor = $_SESSION['usuario_id'];
 $mensagem_atividade = '';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['titulo'])) {
     $titulo = trim($_POST['titulo']);
-    $turma_id = trim($_POST['turma_id']);
-    $id_professor = $_SESSION['user_id'];
+    $descricao = trim($_POST['descricao']);
+    $id_turma = trim($_POST['id_turma']);
 
-    if (!empty($titulo) && !empty($turma_id)) {
+    if (!empty($titulo) && !empty($id_turma)) {
         $sql_insert = "INSERT INTO atividades (titulo, descricao, id_professor, id_turma) VALUES (?, ?, ?, ?)";
-        $stmt_insert = $conexao->prepare($sql_insert);
-        $stmt_insert->bind_param("ssis", $titulo, $descricao, $id_professor, $turma_id);
-        if ($stmt_insert->execute()) {
+        $stmt_insert = $pdo->prepare($sql_insert);
+        if ($stmt_insert->execute([$titulo, $descricao, $id_professor, $id_turma])) {
             $mensagem_atividade = "Atividade adicionada com sucesso!";
         } else {
             $mensagem_atividade = "Erro ao adicionar atividade.";
         }
-        $stmt_insert->close();
+    } else {
+        $mensagem_atividade = "Por favor, preencha todos os campos da atividade.";
     }
 }
 
-
-
-$sql_alunos = "SELECT id, nome, email, turma FROM usuarios WHERE tipo = 'aluno' ORDER BY nome ASC";
-$resultado_alunos = $conexao->query($sql_alunos); 
+// Busca todos os alunos
+$sql_alunos = "SELECT id, nome, email, turma FROM usuarios WHERE tipo = 'aluno' ORDER BY turma, nome ASC";
+$stmt_alunos = $pdo->query($sql_alunos);
+$alunos = $stmt_alunos->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 <!DOCTYPE html>
@@ -49,7 +48,7 @@ $resultado_alunos = $conexao->query($sql_alunos);
     <div class="container" style="max-width: 800px;">
         <h1>Bem-vindo, Professor <?php echo htmlspecialchars($nome_professor); ?>!</h1>
         <p>Esta é a sua área administrativa. <a href="logout.php">Sair</a></p>
-        
+
         <hr>
 
         <h2>Adicionar Nova Atividade</h2>
@@ -60,8 +59,11 @@ $resultado_alunos = $conexao->query($sql_alunos);
             <label for="titulo">Título da Atividade:</label>
             <input type="text" id="titulo" name="titulo" required>
 
-            <label for="turma_id">Para a Turma:</label>
-            <input type="text" id="turma_id" name="turma_id" placeholder="Ex: 3A" required>
+            <label for="descricao">Descrição:</label>
+            <textarea id="descricao" name="descricao"></textarea>
+
+            <label for="id_turma">Para a Turma:</label>
+            <input type="text" id="id_turma" name="id_turma" placeholder="Ex: 3A" required>
 
             <input type="submit" value="Salvar Atividade">
         </form>
@@ -78,14 +80,14 @@ $resultado_alunos = $conexao->query($sql_alunos);
                 </tr>
             </thead>
             <tbody>
-                <?php if ($resultado_alunos && $resultado_alunos->num_rows > 0): ?>
-                    <?php while($aluno = $resultado_alunos->fetch_assoc()): ?>
+                <?php if (!empty($alunos)): ?>
+                    <?php foreach ($alunos as $aluno): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($aluno['nome']); ?></td>
                             <td><?php echo htmlspecialchars($aluno['email']); ?></td>
                             <td><?php echo htmlspecialchars($aluno['turma']); ?></td>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                 <?php else: ?>
                     <tr><td colspan="3">Nenhum aluno cadastrado.</td></tr>
                 <?php endif; ?>
