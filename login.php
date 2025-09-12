@@ -1,29 +1,36 @@
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Login</h1>
-    <!-- Entrada de dados-->
+    <div class="container">
+        <h1>Login</h1>
+
+        <?php if (!empty($erro)): ?>
+            <p class="erro"><?php echo htmlspecialchars($erro); ?></p>
+        <?php endif; ?>
+        <?php if (isset($sucesso)): ?>
+            <p style="color: green;"><?php echo htmlspecialchars($sucesso); ?></p>
+        <?php endif; ?>
+
         <form method="POST">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" required>
             
-            <label>Digite seu email:</label>
-            <input type="email" name="email" required><br><br>
-
-            <label>Digite sua senha:</label>
-            <input type="password" name="senha" required><br><br>
-
-            <hr>
-        
-            <input type="submit" value="Entrar"><br><br>
-
+            <input type="submit" value="Entrar">
         </form>
+        <p><a href="register.php">Não tem uma conta? Cadastre-se</a></p>
+    </div>
 </body>
 </html>
-
 <?php
 
 session_start(); //lembrar informações do login dos usuarios, cookie
