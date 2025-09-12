@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Index</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Seja bem-vindo</h1>
+    <div class="container">
+        <h1>Seja bem-vindo</h1>
 
-    <p>Como gostaria de prosseguir?</p>
+        <p>Efetue o login para acessar o sistema.</p>
 
-    <p><a href="login.php">Efetuar login</a></p>
-    
-    <p><a href="register.php">Novo usuário</a></p>
-
+        <p><a href="login.php">Efetuar login</a></p>
+    </div>
 </body>
 </html>
