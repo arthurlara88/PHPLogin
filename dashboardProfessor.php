@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Garante que apenas o professor pode acessar esta página
+//confere professor
 if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] != 'professor') {
     header("Location: login.php");
     exit();
@@ -11,29 +11,35 @@ require_once 'db_connect.php';
 
 $nome_professor = $_SESSION['usuario_nome'];
 $id_professor = $_SESSION['usuario_id'];
-$mensagem = ''; // Mensagem para feedback ao professor
+$mensagem = ''; //feedback ao professor
 
-// Lógica para adicionar uma nova atividade
+//logica para adicionar uma nova atividade
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['form_type']) && $_POST['form_type'] == 'atividade') {
+
     $titulo = trim($_POST['titulo']);
     $descricao = trim($_POST['descricao']);
     $id_turma = trim($_POST['id_turma']);
 
+    //inserir banco de dados
     if (!empty($titulo) && !empty($id_turma)) {
         $sql_insert = "INSERT INTO atividades (titulo, descricao, id_professor, id_turma) VALUES (?, ?, ?, ?)";
         $stmt_insert = $pdo->prepare($sql_insert);
         if ($stmt_insert->execute([$titulo, $descricao, $id_professor, $id_turma])) {
             $mensagem = "Atividade adicionada com sucesso!";
-        } else {
+        }
+        else {
             $mensagem = "Erro ao adicionar atividade.";
         }
-    } else {
-        $mensagem = "Por favor, preencha todos os campos da atividade.";
+    }
+    else {
+
+        $mensagem = "Por favor, preencha todos os campos.";
     }
 }
 
-// Lógica para registrar um novo aluno
+//logica para registrar um novo aluno
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['form_type']) && $_POST['form_type'] == 'aluno') {
+
     $nome_aluno = trim($_POST['nome_aluno']);
     $email_aluno = trim($_POST['email_aluno']);
     $senha_aluno = trim($_POST['senha_aluno']);
@@ -41,32 +47,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['form_type']) && $_POST
     $tipo_aluno = 'aluno';
 
     if (!empty($nome_aluno) && !empty($email_aluno) && !empty($senha_aluno) && !empty($turma_aluno)) {
+
         $verifica_email = $pdo->prepare("SELECT id FROM usuarios WHERE email = ?");
         $verifica_email->execute([$email_aluno]);
 
+
         if ($verifica_email->fetch()) {
             $mensagem = "Erro: O e-mail já está em uso.";
-        } else {
+        }
+        else {
+            //criptografar senha
             $hash = password_hash($senha_aluno, PASSWORD_DEFAULT);
+
+            //insert
             $sql_insert = "INSERT INTO usuarios (nome, email, senha, tipo, turma) VALUES (?, ?, ?, ?, ?)";
             $stmt_insert = $pdo->prepare($sql_insert);
             if ($stmt_insert->execute([$nome_aluno, $email_aluno, $hash, $tipo_aluno, $turma_aluno])) {
                 $mensagem = "Aluno " . htmlspecialchars($nome_aluno) . " cadastrado com sucesso!";
-            } else {
+            }
+            else {
                 $mensagem = "Erro ao cadastrar aluno.";
             }
         }
-    } else {
-        $mensagem = "Por favor, preencha todos os campos do aluno.";
+    }
+    else {
+        $mensagem = "Por favor, preencha todos os campos.";
     }
 }
 
-// Busca todos os alunos para exibição
+//busca todos os alunos para exibição
 $sql_alunos = "SELECT id, nome, email, turma FROM usuarios WHERE tipo = 'aluno' ORDER BY turma, nome ASC";
+
+//consulta SQL
 $stmt_alunos = $pdo->query($sql_alunos);
 $alunos = $stmt_alunos->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -76,11 +94,15 @@ $alunos = $stmt_alunos->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
     <div class="container" style="max-width: 800px;">
-        <h1>Bem-vindo, Professor <?php echo htmlspecialchars($nome_professor); ?>!</h1>
-        <p>Esta é a sua área administrativa. <a href="logout.php">Sair</a></p>
+        <h1>Bem-vindo(a), Professor(a) <?php echo htmlspecialchars($nome_professor); ?>!</h1>
+        <p>Esta é a sua área.</p>
+
+        <p><a href="logout.php">Sair</a></p>
+
 
         <hr>
         
+        <!-- Estilo com IA (nao consegui aprender CSS a tempo :( ) -->
         <?php if (!empty($mensagem)): ?>
             <p style="color: green; font-weight: bold;"><?php echo htmlspecialchars($mensagem); ?></p>
         <?php endif; ?>
@@ -97,7 +119,7 @@ $alunos = $stmt_alunos->fetchAll(PDO::FETCH_ASSOC);
             <label for="senha_aluno">Senha do Aluno:</label>
             <input type="password" id="senha_aluno" name="senha_aluno" required>
             
-            <label for="turma_aluno">Turma:</label>
+            <label for="turma_aluno">Turma do aluno:</label>
             <input type="text" id="turma_aluno" name="turma_aluno" required>
 
             <input type="submit" value="Cadastrar Aluno">
@@ -112,9 +134,9 @@ $alunos = $stmt_alunos->fetchAll(PDO::FETCH_ASSOC);
             <input type="text" id="titulo" name="titulo" required>
 
             <label for="descricao">Descrição:</label>
-            <textarea id="descricao" name="descricao"></textarea>
+            <textarea id="descricao" name="descricao" placeholder="Ex: Atividade de PDO"></textarea>
 
-            <label for="id_turma">Para a Turma:</label>
+            <label for="id_turma">Turma:</label>
             <input type="text" id="id_turma" name="id_turma" placeholder="Ex: 3A" required>
 
             <input type="submit" value="Salvar Atividade">
@@ -123,6 +145,7 @@ $alunos = $stmt_alunos->fetchAll(PDO::FETCH_ASSOC);
         <hr>
 
         <h2>Alunos Cadastrados</h2>
+        <!-- Tabela HTML (chato) -->
         <table>
             <thead>
                 <tr>

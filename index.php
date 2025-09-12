@@ -14,7 +14,7 @@
 
         <p><a href="login.php">Efetuar login</a></p>
 
-        <p>Cadastre um novo professor.</p>
+        <p>Cadastre um professor.</p>
 
         <p><a href="register.php">Cadastrar</a></p>
     </div>

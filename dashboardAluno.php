@@ -1,5 +1,8 @@
 <?php
-session_start();
+
+session_start();//inica seção
+
+//confere tipo de usuario
 if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] != 'aluno') {
     header("Location: login.php");
     exit;
@@ -10,13 +13,17 @@ require_once 'db_connect.php';
 $aluno_id = $_SESSION['usuario_id'];
 $turma_aluno = $_SESSION['usuario_turma'];
 
-// Busca as atividades da turma do aluno
+//busca as atividades da turma do aluno
 $sql_atividades = "SELECT titulo, descricao, data_criacao FROM atividades WHERE id_turma = ?";
 $stmt_atividades = $pdo->prepare($sql_atividades);
-$stmt_atividades->execute([$turma_aluno]);
+$stmt_atividades->execute([$turma_aluno]); //executa comando sql
+
+//busca as linhas e retorna array
 $atividades = $stmt_atividades->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -27,7 +34,9 @@ $atividades = $stmt_atividades->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
     <div class="container">
+        <!-- htmlspecialchars tira caractere especial-->
         <h1>Bem-vindo, <?php echo htmlspecialchars($_SESSION['usuario_nome']); ?>!</h1>
+        <!--Exibição -->
         <p>Sua turma: <strong><?php echo htmlspecialchars($turma_aluno); ?></strong></p>
 
         <hr>
@@ -45,7 +54,7 @@ $atividades = $stmt_atividades->fetchAll(PDO::FETCH_ASSOC);
                 <?php endforeach; ?>
             </div>
         <?php else: ?>
-            <p>Nenhuma atividade encontrada para sua turma.</p>
+            <p>Nenhuma atividade encontrada</p>
         <?php endif; ?>
 
         <a href="logout.php">Sair</a>
