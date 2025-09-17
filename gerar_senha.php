@@ -1,3 +1,5 @@
+<!-- Scrip de ia para gerar hash para o admin-->
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>

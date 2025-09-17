@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['form_type']) && $_POST
 
         $sql_insert = "INSERT INTO atividades (titulo, descricao, id_professor, id_turma) VALUES (?, ?, ?, ?)";
         $stmt_insert = $pdo->prepare($sql_insert);
-        
+
         if ($stmt_insert->execute([$titulo, $descricao, $id_professor, $id_turma])) {
             $mensagem = "Atividade adicionada com sucesso!";
         }
@@ -51,7 +51,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['form_type']) && $_POST
             $mensagem = "Erro ao cadastrar: e-mail já em uso.";
         }
         else {
-            // CORREÇÃO: Criptografar a senha antes de salvar no banco
+
+            //Criptografar a senha antes de salvar no banco
             $hash = password_hash($senha_aluno, PASSWORD_DEFAULT);
             $sql_insert = "INSERT INTO usuarios (nome, email, senha, tipo, turma) VALUES (?, ?, ?, ?, ?)";
             $stmt_insert = $pdo->prepare($sql_insert);
@@ -63,14 +64,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['form_type']) && $_POST
                 $mensagem = "Erro ao cadastrar aluno.";
             }
         }
-    } else {
+    }
+    else {
         $mensagem = "Por favor, preencha todos os campos do aluno.";
     }
 }
-// ---------------- Buscar lista de alunos ----------------
+
+//Buscar lista de alunos
 $sql_alunos = "SELECT nome, email, turma FROM usuarios WHERE tipo = 'aluno' ORDER BY turma, nome ASC";
 $stmt_alunos = $pdo->query($sql_alunos);
 $alunos = $stmt_alunos->fetchAll(PDO::FETCH_ASSOC);
+
+// Lógica para buscar as atividades do professor logado (se houver essa necessidade) ou todas as atividades
+$sql_atividades = "SELECT * FROM atividades ORDER BY data_criacao DESC";
+$stmt_atividades = $pdo->query($sql_atividades);
+$atividades = $stmt_atividades->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -78,6 +87,7 @@ $alunos = $stmt_alunos->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <title>Dashboard do Professor</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="icon.png" type="image/png">
 </head>
 <body>
 <div class="container" style="max-width: 800px;">
@@ -129,7 +139,7 @@ $alunos = $stmt_alunos->fetchAll(PDO::FETCH_ASSOC);
                 <th>Nome</th>
                 <th>Email</th>
                 <th>Turma</th>
-            </tr>
+                <th>Ações</th> </tr>
         </thead>
         <tbody>
             <?php if (!empty($alunos)): ?>
@@ -138,10 +148,40 @@ $alunos = $stmt_alunos->fetchAll(PDO::FETCH_ASSOC);
                         <td><?php echo htmlspecialchars($aluno['nome']); ?></td>
                         <td><?php echo htmlspecialchars($aluno['email']); ?></td>
                         <td><?php echo htmlspecialchars($aluno['turma']); ?></td>
+                        <td>
+                            <a href="editar_aluno.php?id=<?php echo $aluno['id']; ?>">Editar</a> |
+                            <a href="excluir.php?id=<?php echo $aluno['id']; ?>&tipo=aluno">Excluir</a>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             <?php else: ?>
-                <tr><td colspan="3">Nenhum aluno cadastrado.</td></tr>
+                <tr><td colspan="4">Nenhum aluno cadastrado.</td></tr> <?php endif; ?>
+        </tbody>
+    </table>
+
+    <h2>Atividades Cadastradas</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Turma</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (!empty($atividades)): ?>
+                <?php foreach ($atividades as $atividade): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($atividade['titulo']); ?></td>
+                        <td><?php echo htmlspecialchars($atividade['id_turma']); ?></td>
+                        <td>
+                            <a href="editar_atividade.php?id=<?php echo $atividade['id']; ?>">Editar</a> |
+                            <a href="excluir.php?id=<?php echo $atividade['id']; ?>&tipo=atividade">Excluir</a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr><td colspan="3">Nenhuma atividade cadastrada.</td></tr>
             <?php endif; ?>
         </tbody>
     </table>
