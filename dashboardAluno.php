@@ -35,7 +35,7 @@ $atividades = $stmt_atividades->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <div class="container">
         <!-- htmlspecialchars tira caractere especial-->
-        <h1>Bem-vindo, <?php echo htmlspecialchars($_SESSION['usuario_nome']); ?>!</h1>
+        <h1>Bem-vindo(a), <?php echo htmlspecialchars($_SESSION['usuario_nome']); ?>!</h1>
         <!--Exibição -->
         <p>Sua turma: <strong><?php echo htmlspecialchars($turma_aluno); ?></strong></p>
 
@@ -48,7 +48,7 @@ $atividades = $stmt_atividades->fetchAll(PDO::FETCH_ASSOC);
                 <?php foreach ($atividades as $atividade): ?>
                     <div class="atividade-card">
                         <h3><?php echo htmlspecialchars($atividade['titulo']); ?></h3>
-                        <p><strong>Data:</strong> <?php echo htmlspecialchars($atividade['data_criacao']); ?></p>
+                        <p><strong>Data de criação da atividade:</strong> <?php echo htmlspecialchars($atividade['data_criacao']); ?></p>
                         <p><?php echo htmlspecialchars($atividade['descricao']); ?></p>
                     </div>
                 <?php endforeach; ?>

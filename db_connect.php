@@ -1,18 +1,22 @@
 <?php
 
-$server = "newton.coltec.ufmg.br";
-$username = "a2024953241@teiacoltec.org"; // usuario
-$password = "a2024953241";
-$dbname = "a2024953241@teiacoltec.org"; //nome do seu banco de dados
+$host = 'localhost';
+$dbname = 'a2024953241@teiacoltec.org';
+$user = 'a2024953241@teiacoltec.org';
+$pass = 'a2024953241';
+$charset = 'utf8mb4';
 
-//Tenta estabelecer conexao com o phpmyadmin
-//Senao ele so encerra o processo
+$dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
+
+$pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
 try {
-    $pdo = new PDO("mysql:host=$server;dbname=$dbname;charset=utf8", $username, $password);
-
-    //modo do db
+    $pdo = new PDO($dsn, $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-}
-catch(PDOException $e) {
-    die("Erro na conexão: " . $e->getMessage());
+    //    echo " Conexão com o banco de dados realizada com sucesso!";
+} catch (PDOException $e) {
+    echo " Erro ao conectar com o banco de dados: " . $e->getMessage();
+    exit;
 }
