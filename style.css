@@ -1,13 +1,13 @@
 /* Desing made by IA */ 
 /* Nao consegui entender CSS a tempo :( tem q estudar mais isso depois*/
 
-/* Importando uma fonte do Google Fonts para um visual melhor */
+/* Importando uma fonte do Google Fonts para um visual mais moderno */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
 :root {
-    /* Cores */
-    --cor-primaria: #007BFF;
-    --cor-secundaria: #0056b3;
+    /* Cores alteradas de azul para roxo */
+    --cor-primaria: #8A2BE2; /* Roxo principal */
+    --cor-secundaria: #6A0DAD; /* Roxo mais escuro para hover */
     --cor-fundo: #f4f7f6;
     --cor-texto: #333;
     --cor-borda: #ccc;
@@ -22,6 +22,18 @@ body {
     color: var(--cor-texto);
     margin: 0;
     padding: 0;
+    
+    /* Adicionando a imagem de fundo */
+    background-image: url('manoelgomes.jpg');
+    background-size: cover; /* Ajusta a imagem para cobrir toda a área */
+    background-position: center; /* Centraliza a imagem */
+    background-attachment: fixed; /* Mantém a imagem fixa durante a rolagem */
+    background-repeat: no-repeat; /* Evita a repetição da imagem */
+    
+    /* Adiciona uma camada escura para melhorar a legibilidade do texto */
+    background-color: rgba(0, 0, 0, 0.5); 
+    background-blend-mode: darken;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -37,6 +49,13 @@ body {
     width: 100%;
     max-width: 450px;
     text-align: center;
+}
+
+/* Estilo dos títulos */
+h1, h2, h3 {
+    color: var(--cor-secundaria);
+    margin-top: 0;
+    font-weight: 700;
 }
 
 /* Estilo para formulários e seus elementos */
@@ -105,8 +124,6 @@ a:hover {
 p {
     margin: 0.5rem 0;
 }
-
-/* ------------------ NOVOS ESTILOS ------------------ */
 
 /* Estilo para mensagens de erro */
 .erro {
