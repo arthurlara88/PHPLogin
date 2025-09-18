@@ -1,9 +1,9 @@
-CREATE TABLE `atividades` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `titulo` varchar(150) NOT NULL,
-  `descricao` text DEFAULT NULL,
-  `id_professor` int(11) NOT NULL,
-  `id_turma` varchar(50) NOT NULL,
-  `data_criacao` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,   -- identificador único
+    nome VARCHAR(100) NOT NULL,          -- nome do usuário
+    email VARCHAR(100) NOT NULL UNIQUE,  -- email, não pode repetir
+    senha VARCHAR(255) NOT NULL,         -- senha criptografada (bcrypt precisa de espaço)
+    tipo ENUM('professor','aluno') NOT NULL,  -- define se é professor ou aluno
+    turma VARCHAR(50),                   -- turma (se aluno)
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- data de criação
+);
